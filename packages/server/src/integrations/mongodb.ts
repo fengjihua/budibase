@@ -29,6 +29,9 @@ interface MongoDBQuery {
   extra: {
     [key: string]: string
   }
+  paginationValues: {
+    [key: string]: string
+  }
 }
 
 const getSchema = () => {
@@ -461,6 +464,8 @@ class MongoIntegration implements IntegrationBase {
   }
 
   async read(query: MongoDBQuery) {
+    console.log("mongodb read", query)
+
     try {
       await this.connect()
       const db = this.client.db(this.config.db)
@@ -469,7 +474,21 @@ class MongoIntegration implements IntegrationBase {
 
       switch (query.extra.actionType) {
         case "find": {
-          return await collection.find(json).toArray()
+          let cursor = collection.find(json)
+
+          if (query.paginationValues) {
+            // Pagination: check page and limit
+            const page = query.paginationValues?.page
+              ? parseInt(query.paginationValues.page, 10)
+              : 1
+            const limit = query.paginationValues?.limit
+              ? parseInt(query.paginationValues.limit, 10)
+              : 0
+            const skip = (page - 1) * limit
+            if (page > 0 && limit > 0) cursor = cursor.skip(skip).limit(limit)
+          }
+
+          return await cursor.toArray()
         }
         case "findOne": {
           return await collection.findOne(json)

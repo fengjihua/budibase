@@ -49,8 +49,12 @@
     href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap"
     rel="stylesheet"
   />
-  <link
+  <!-- <link
     href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css"
+    rel="stylesheet"
+  /> -->
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/2.5.0/remixicon.css"
     rel="stylesheet"
   />
   <style>
